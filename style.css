@@ -1,0 +1,22 @@
+
+.center{
+    left:25%;
+    width:50%;
+    height:50%;
+    top:30%;
+    font-family: cursive;
+    font-size: 5em;
+    position:absolute;
+    cursor: default;
+    text-align:center;
+}
+
+
+.fineprint{
+    left:25%;
+    top:99.99%;
+    font-size: 0.05em;
+    position:absolute;
+    cursor: default;
+    text-align:center;
+}
