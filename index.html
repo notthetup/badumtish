@@ -1,37 +1,35 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title></title>
-	<meta name="description" content="">
+	<title>ba-dum-tish</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="style.css">
-	<title>ba-dum-tish!</title>
+	<style>
+		body {width: 100%; display: block; margin: 0; padding: 0; text-align:center; }
+		h1 {font: 18vw cursive; margin: 10% 0 0 0; }
+		p {font: .8em sans-serif; color: #aaa;}
+		a {color: #aaa; text-decoration: none;}
+		a:link, a:visited {text-decoration: none;}
+		a:hover, a:active {text-decoration: underline;}
+	</style>
 </head>
 <body>
-	<!--[if lt IE 7]>
-		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-	<![endif]-->
+	<!--[if lt IE 9]> <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p> <![endif]-->
 
-	<div class="center" > ba-dum-tish </div>
-
-
-	<div class="fineprint">Audio from <a href="http://www.freesound.org/people/Simon_Lacelle/sounds/37215/">Simon_Lacelle</a></div>
+	<h1>ba-dum-tish</h1>
+	<p><a href="http://www.freesound.org/people/Simon_Lacelle/sounds/37215/">Audio from Simon Lacelle</a></p>
 
 </body>
 <script type="text/javascript">
-		var a = new Audio("badumtish.wav");
-		a.play();
-		a = new Audio("badumtish.wav");
-		window.addEventListener('click', function(){
-			if (a.readyState === 4){
-				a.play();
-				a = new Audio("badumtish.wav");
-			}
-		});
+	var a = new Audio('badumtish.wav');
+	a.play();
+	a = new Audio('badumtish.wav');
+	window.addEventListener('click', function(){
+		if (a.readyState === 4){
+			a.play();
+			a = new Audio('badumtish.wav');
+		}
+	});
 </script>
 </html>
