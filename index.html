@@ -17,19 +17,25 @@
 <body>
 	<!--[if lt IE 9]> <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p> <![endif]-->
 
-	<h1>ba-dum-tish</h1>
+	<h1 id="container">ba-dum-tish</h1>
 	<p><a href="http://www.freesound.org/people/Simon_Lacelle/sounds/37215/">Audio from Simon Lacelle</a></p>
 
 </body>
 <script type="text/javascript">
-		var badumtish = new Audio("badumtish.mp3");
+	var badumtish = new Audio("badumtish.mp3");
+	badumtish.preload = 'auto';
+	badumtish.play();
+	badumtish = new Audio("badumtish.mp3");
+	window.addEventListener('click', function(){
 		badumtish.play();
 		badumtish = new Audio("badumtish.mp3");
-	window.addEventListener('click', function(){
-		if (badumtish.readyState === 4){
-			badumtish.play();
-			badumtish = new Audio("badumtish.mp3");
-		}
 	});
+
+	// Dumb work around for mobile safari
+	if (navigator.userAgent.match(/(iPad|iPhone|iPod touch);.*CPU.*OS \d/i)){
+		var containerEl = document.getElementById('container');
+		containerEl.addEventListener('click', function(){
+		});
+	}
 </script>
 </html>
