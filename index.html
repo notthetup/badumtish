@@ -12,24 +12,81 @@
 		a {color: #aaa; text-decoration: none;}
 		a:link, a:visited {text-decoration: none;}
 		a:hover, a:active {text-decoration: underline;}
+		.noselect {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
 	</style>
 </head>
 <body>
 	<!--[if lt IE 9]> <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p> <![endif]-->
 
-	<h1 id="container">ba-dum-tish</h1>
+	<h1 id="container" class="noselect">ba-dum-tish</h1>
 	<p><a href="http://www.freesound.org/people/Simon_Lacelle/sounds/37215/">Audio from Simon Lacelle</a></p>
 
 </body>
 <script type="text/javascript">
-	var badumtish = new Audio("badumtish.mp3");
-	badumtish.preload = 'auto';
-	badumtish.play();
-	badumtish = new Audio("badumtish.mp3");
-	window.addEventListener('click', function(){
+
+	var badumtish;
+
+	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	if (window.AudioContext){
+
+		var bufferSourceNode;
+		var audioContext = new AudioContext();
+		function GetAudioFromURL(URL, onLoadCallback, audioContext){
+		    if (!audioContext){
+		        window.AudioContext = window.AudioContext || window.webkitAudioContext
+		        audioContext = new AudioContext();
+		    }
+		    var request = new XMLHttpRequest();
+		    request.open('GET', URL, true);
+		    request.responseType = 'arraybuffer';
+		    request.onload = function () {
+		        audioContext.decodeAudioData(request.response, function(buffer){
+		            if (typeof onLoadCallback === 'function')
+		                onLoadCallback(null, buffer);
+		        },function (){
+		        	console.error("Decoding Error");
+		        });
+		    };
+		    request.send();
+		}
+
+		GetAudioFromURL("badumtish.mp3", function(err, buffer){
+			badumtish = buffer;
+			bufferSourceNode = audioContext.createBufferSource();
+			bufferSourceNode.buffer = badumtish;
+			bufferSourceNode.connect(audioContext.destination);
+			bufferSourceNode.start(0);
+
+			bufferSourceNode = audioContext.createBufferSource();
+			bufferSourceNode.buffer = badumtish;
+			bufferSourceNode.connect(audioContext.destination);
+
+			window.addEventListener('click', function(){
+				bufferSourceNode.start(0);
+				bufferSourceNode = audioContext.createBufferSource();
+				bufferSourceNode.buffer = badumtish;
+				bufferSourceNode.connect(audioContext.destination);
+			}, audioContext);
+
+		});
+
+	}else{
+		badumtish = new Audio("badumtish.mp3");
+		badumtish.preload = 'auto';
 		badumtish.play();
 		badumtish = new Audio("badumtish.mp3");
-	});
+		window.addEventListener('click', function(){
+			badumtish.play();
+			badumtish = new Audio("badumtish.mp3");
+		});
+	}
 
 	// Dumb work around for mobile safari
 	if (navigator.userAgent.match(/(iPad|iPhone|iPod touch);.*CPU.*OS \d/i)){
