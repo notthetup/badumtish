@@ -29,6 +29,7 @@
 	<p><a href="http://www.freesound.org/people/Simon_Lacelle/sounds/37215/">Audio from Simon Lacelle</a></p>
 
 </body>
+<script src="./midimessage.js"></script>
 <script type="text/javascript">
 
 	var badumtish;
@@ -69,10 +70,7 @@
 			bufferSourceNode.connect(audioContext.destination);
 
 			window.addEventListener('click', function(){
-				bufferSourceNode.start(0);
-				bufferSourceNode = audioContext.createBufferSource();
-				bufferSourceNode.buffer = badumtish;
-				bufferSourceNode.connect(audioContext.destination);
+				playWebAudio();
 			}, audioContext);
 
 		});
@@ -80,12 +78,26 @@
 	}else{
 		badumtish = new Audio("badumtish.mp3");
 		badumtish.preload = 'auto';
+		badumtish.load();
 		badumtish.play();
 		badumtish = new Audio("badumtish.mp3");
 		window.addEventListener('click', function(){
-			badumtish.play();
-			badumtish = new Audio("badumtish.mp3");
+			playHTMLAudio();
 		});
+	}
+
+	window.playWebAudio = function(){
+		bufferSourceNode.start(0);
+		bufferSourceNode = audioContext.createBufferSource();
+		bufferSourceNode.buffer = badumtish;
+		bufferSourceNode.connect(audioContext.destination);
+	}
+
+	window.playHTMLAudio = function(){
+		badumtish.play();
+		badumtish = new Audio("badumtish.mp3");
+		badumtish.preload = 'auto';
+		badumtish.load();
 	}
 
 	// Dumb work around for mobile safari
@@ -93,6 +105,55 @@
 		var containerEl = document.getElementById('container');
 		containerEl.addEventListener('click', function(){
 		});
+	}
+
+	if (window.midimessage && navigator.requestMIDIAccess){
+		navigator.requestMIDIAccess().then( onMIDIInit, onMIDIReject );
+	}
+	else{
+		console.log("DOH! No MIDI support present in your browser.");
+	}
+
+	function onMIDIInit (midi){
+		var foundString = "Found " + midi.inputs.size + " inputs and " + midi.outputs.size + " outputs.";
+		onMIDIConect(midi);
+
+		midi.onstatechange = function(event){
+			// console.log("MIDIConnectionEvent on port", event.port);
+			if (event.port.type === "input" && event.port.connection === "open"){
+				onMIDIConect(midi);
+			}
+		}
+	}
+
+	function onMIDIConect(midi){
+
+		var inputs=midi.inputs.values();
+		for ( var input = inputs.next(); input && !input.done; input = inputs.next()) {
+			var midiInput = input.value;
+			// console.log("Input id:", midiInput.id, midiInput);
+			if (midiInput.manufacturer === "Teensyduino"){
+				// console.log("Input id:", midiInput.id, midiInput);
+				midiInput.onmidimessage = function(event){
+					var midiMessage = midimessage(event);
+					if (midiMessage.messageType = "controlchange" &&
+					midiMessage.channel === 1 &&
+					midiMessage.controllerNumber === 1 &&
+					midiMessage.controllerValue === 1){
+						if (window.AudioContext){
+							playWebAudio();
+						}else{
+							playHTMLAudio();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	function onMIDIReject (error){
+		console.error(error);
+		return;
 	}
 </script>
 </html>
