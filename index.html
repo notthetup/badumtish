@@ -135,16 +135,10 @@
 			if (midiInput.manufacturer === "Teensyduino"){
 				// console.log("Input id:", midiInput.id, midiInput);
 				midiInput.onmidimessage = function(event){
-					var midiMessage = midimessage(event);
-					if (midiMessage.messageType = "controlchange" &&
-					midiMessage.channel === 1 &&
-					midiMessage.controllerNumber === 1 &&
-					midiMessage.controllerValue === 1){
-						if (window.AudioContext){
-							playWebAudio();
-						}else{
-							playHTMLAudio();
-						}
+					if (window.AudioContext){
+						playWebAudio();
+					}else{
+						playHTMLAudio();
 					}
 				}
 			}
