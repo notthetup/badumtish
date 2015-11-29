@@ -58,16 +58,19 @@
 		    request.send();
 		}
 
+		var gain = audioContext.createGain();
+		gain.connect(audioContext.destination);
+
 		GetAudioFromURL("badumtish.mp3", function(err, buffer){
 			badumtish = buffer;
 			bufferSourceNode = audioContext.createBufferSource();
 			bufferSourceNode.buffer = badumtish;
-			bufferSourceNode.connect(audioContext.destination);
+			bufferSourceNode.connect(gain);
 			bufferSourceNode.start(0);
 
 			bufferSourceNode = audioContext.createBufferSource();
 			bufferSourceNode.buffer = badumtish;
-			bufferSourceNode.connect(audioContext.destination);
+			bufferSourceNode.connect(gain);
 
 			window.addEventListener('click', function(){
 				playWebAudio();
@@ -90,7 +93,7 @@
 		bufferSourceNode.start(0);
 		bufferSourceNode = audioContext.createBufferSource();
 		bufferSourceNode.buffer = badumtish;
-		bufferSourceNode.connect(audioContext.destination);
+		bufferSourceNode.connect(gain);
 	}
 
 	window.playHTMLAudio = function(){
@@ -132,16 +135,29 @@
 		for ( var input = inputs.next(); input && !input.done; input = inputs.next()) {
 			var midiInput = input.value;
 			// console.log("Input id:", midiInput.id, midiInput);
-			if (midiInput.manufacturer === "Teensyduino"){
+			// if (midiInput.manufacturer === "Teensyduino"){
 				// console.log("Input id:", midiInput.id, midiInput);
 				midiInput.onmidimessage = function(event){
-					if (window.AudioContext){
-						playWebAudio();
-					}else{
-						playHTMLAudio();
+					var msg = midimessage (event);
+					if (msg.messageType === "noteon"){
+						var volume = Math.exp(6.906*(msg.velocity/64))/1000;
+						if (volume > 1){
+							volume = 1;
+						}
+						console.log(volume);
+						if (gain){
+							gain.gain.value = volume;
+						}else{
+							badumtish.volume = volume;
+						}
+						if (window.AudioContext){
+							playWebAudio();
+						}else{
+							playHTMLAudio();
+						}
 					}
 				}
-			}
+			// }
 		}
 	}
 
