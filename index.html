@@ -89,7 +89,10 @@
 		});
 	}
 
-	window.playWebAudio = function(){
+	window.playWebAudio = function(speed){
+		if(speed){
+			bufferSourceNode.playbackRate.value = speed;
+		}
 		bufferSourceNode.start(0);
 		bufferSourceNode = audioContext.createBufferSource();
 		bufferSourceNode.buffer = badumtish;
@@ -151,7 +154,7 @@
 							badumtish.volume = volume;
 						}
 						if (window.AudioContext){
-							playWebAudio();
+							playWebAudio(Math.pow(2, (msg.key-60)/12));
 						}else{
 							playHTMLAudio();
 						}
