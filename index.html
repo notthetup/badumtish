@@ -74,10 +74,10 @@
 			bufferSourceNode.connect(gain);
 
 			window.addEventListener('click', function(){
-				if (contextSuspended) {
-					audioContext.resume()
-					contextSuspended = false;
-				}
+				// if (contextSuspended) {
+				// 	audioContext.resume()
+				// 	contextSuspended = false;
+				// }
 				playWebAudio();
 			}, audioContext);
 
@@ -115,6 +115,10 @@
 	if (navigator.userAgent.match(/(iPad|iPhone|iPod touch);.*CPU.*OS \d/i)){
 		var containerEl = document.getElementById('container');
 		containerEl.addEventListener('click', function(){
+		if (contextSuspended) {
+				audioContext.resume()
+				contextSuspended = false;
+			}
 		});
 	}
 
