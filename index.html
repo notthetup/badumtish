@@ -86,6 +86,10 @@
 		badumtish.play();
 		badumtish = new Audio("badumtish.mp3");
 		window.addEventListener('click', function(){
+			if (contextSuspended) {
+				audioContext.resume()
+				contextSuspended = false;
+			}
 			playHTMLAudio();
 		});
 	}
@@ -93,9 +97,6 @@
 	window.playWebAudio = function(speed){
 		if(speed){
 			bufferSourceNode.playbackRate.value = speed;
-		}
-		if (contextSuspended){
-			audioContext.resume()
 		}
 		bufferSourceNode.start(0);
 		bufferSourceNode = audioContext.createBufferSource();
