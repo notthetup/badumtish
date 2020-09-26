@@ -74,6 +74,10 @@
 			bufferSourceNode.connect(gain);
 
 			window.addEventListener('click', function(){
+				if (contextSuspended) {
+					audioContext.resume()
+					contextSuspended = false;
+				}
 				playWebAudio();
 			}, audioContext);
 
@@ -86,10 +90,6 @@
 		badumtish.play();
 		badumtish = new Audio("badumtish.mp3");
 		window.addEventListener('click', function(){
-			if (contextSuspended) {
-				audioContext.resume()
-				contextSuspended = false;
-			}
 			playHTMLAudio();
 		});
 	}
