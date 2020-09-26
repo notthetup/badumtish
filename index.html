@@ -38,6 +38,7 @@
 	if (window.AudioContext){
 
 		var bufferSourceNode;
+		var contextSuspended = true;
 		var audioContext = new AudioContext();
 		function GetAudioFromURL(URL, onLoadCallback, audioContext){
 		    if (!audioContext){
@@ -92,6 +93,9 @@
 	window.playWebAudio = function(speed){
 		if(speed){
 			bufferSourceNode.playbackRate.value = speed;
+		}
+		if (contextSuspended){
+			audioContext.resume()
 		}
 		bufferSourceNode.start(0);
 		bufferSourceNode = audioContext.createBufferSource();
